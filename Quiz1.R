@@ -16,29 +16,47 @@ Get
         
 ##   Problem 3 - read rows 18:23 and columns 7:15
         
-        url2<-"https://d396qusza40orc.cloudfront.net/getdata%2Fdata%2FDATA.gov_NGAP.xlsx "
-        dest2<-file.path(getwd(),"Quiz1_2")
+        url2 <- "https://d396qusza40orc.cloudfront.net/getdata%2Fdata%2FDATA.gov_NGAP.xlsx "
+        dest2 <- file.path(getwd(),"data2")
         download.file(url2,dest2)
-        date1<-date()
-        print(date1)
-        ##STUFF ABOVE DID NOT WORK?  I downloaded file to my directory and started below
+        ##date1<-date()
+        ##print(date1)
         
+        ##STUFF ABOVE DID NOT WORK????
         
-        xcol<-7:15
-        yrow<-18:23
-                ##,colIndex=xcol,rowIndex=yrow
-        cc1<-read.xlsx(file="getdata_data_DATA.gov_NGAP.xlsx",sheetIndex = 1,colIndex = xcol,rowIndex = yrow,header = TRUE)
+        ##I downloaded file to my directory direct from the link and started below
         
-        sum(cc1$Zip*cc1$Ext,na.rm = T)
+        ##xcol <- 7:15
+        ##yrow <- 18:23
+        ##,colIndex=xcol,rowIndex=yrow
+        
+        goodfile<- read.xlsx("getdata_data_DATA.gov_NGAP.xlsx", sheetIndex = 1, rowIndex = 18:23, colIndex = 7:15,header = TRUE)
+        
+        sum(goodfile$Zip*goodfile$Ext,na.rm = T)
+        
         
         
 ##   Problem 4  - how many restaurants in zipcode 21231?
         
         url3<-"https://d396qusza40orc.cloudfront.net/getdata%2Fdata%2Frestaurants.xml" 
         
-        c22 <- xmlTreeParse(url3,useInternal=TRUE)
-        rootNode<-xmlRoot(c22)
-        xmlName(rootNode)
+        c23 <- xmlTreeParse("url3", useInternal=TRUE)
+        rootnode <- xmlRoot(c23)
+        sum(xpathSApply(rootnode,"//zipcode",xmlValue) == 21231)
         
-        c1<-read.csv("Quiz1_3")
+        ##ABOVE DOES NOT WORK????   BUT BELOW DOES WORK (TAKES A FEW SECONDS)
+        
+        c22 <-  xmlTreeParse("http://d396qusza40orc.cloudfront.net/getdata%2Fdata%2Frestaurants.xml",useInternal = TRUE)
+        rootnode <- xmlRoot(c22)
+        sum(xpathSApply(rootnode,"//zipcode",xmlValue) == 21231)
+        
+        
+##      Problem 5 - data.table problem
+        
+        download.file("https://d396qusza40orc.cloudfront.net/getdata%2Fdata%2Fss06pid.csv",getwd())
+        print(date())
+        
+        DT = dread
+        
+          
         
