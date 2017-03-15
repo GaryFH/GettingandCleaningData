@@ -80,3 +80,9 @@ Get
         
         ## This one didn't run - system.time(rowMeans(DT)[DT$SEX==1]; rowMeans(DT)[DT$SEX==2])
         
+        
+##Connecting and Listing Databases - week2 reading MySQL - ##HINT - LOAD RMYSQL FIRST        
+library(RMySQL)        
+ucscDb<-dbConnect(MySQL(),user="genome", host="genome-mysql.cse.ucsc.edu")
+result<-dbGetQuery(ucscDb,"show databases;");dbDisconnect(ucscDb);
+        
