@@ -56,7 +56,27 @@ Get
         download.file("https://d396qusza40orc.cloudfront.net/getdata%2Fdata%2Fss06pid.csv",getwd())
         print(date())
         
-        DT = dread
+        ##AGAIN - I COULDN'T DOWNLOAD ABOVE - I SAVED THE FILE DIRECTLY TO MY WD THROUGH WINDOWS
         
-          
+        DT = fread("getdata_data_ss06pid.csv")
+        system.time(tapply(DT$pwgtp15,DT$SEX,mean))
+        ##  0  0  0
+        
+        system.time(mean(DT[DT$SEX==1,]$pwgtp15), mean(DT[DT$SEX==2,]$pwgtp15))
+        ##  .01  0.0  0.01
+        
+     
+        
+        system.time(sapply(split(DT$pwgtp15,DT$SEX),mean))
+        #  0  0  0.7
+        
+        system.time(DT[,mean(pwgtp15),by=SEX])
+        ##.02 .00  .05
+        
+        
+        system.time(mean(DT$pwgtp15,by=DT$SEX))
+        
+          ##   0  0  0
+        
+        ## This one didn't run - system.time(rowMeans(DT)[DT$SEX==1]; rowMeans(DT)[DT$SEX==2])
         
