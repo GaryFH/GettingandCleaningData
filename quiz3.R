@@ -239,6 +239,70 @@ ddply(InsectSprays,.(spray),summarize,sum=sum(count))   #did not work-this seems
 
 
 
+##              dplyr stuff - ABOUT WORKING WITH DATA FRAMES MORE EFFICENTLY/FAST
+
+##assumes tidy data (1 observation/row,  1 variable/column, etc)
+## find out about your df - remember "names(df)-gives you variable names
+
+
+##chicago<-readRDS("chicago.rds") - used as a example but didn't tell how to download
+
+
+
+##      dplyr SELECT FUNCTION
+## is one of dplyr's good applications/verb - JUST USE NAMES - NO "" 
+##head(select(df,name1:name5)) or head(select(df,name1)) or 
+##head(select(df,c(name1, name3,name5))
+##head(select(df,-(name1:name5)) - GIVES YOU ALL COLUMNS EXCEPT THOSE NAMED
+
+
+##      dplyr FILTER FUNCTION
+##df1<-filter(chicago, name1>30)   returns only rows with name1>30
+##df2<-filter(chicago, name1>30&name2<80) can subset rows based on more than one column values
+
+
+
+##      dplyr ARRANGE FUNCTION  reorders the rows based on the values of a column
+## dfa<-arrange(df,name1)        reorders df from low to high for values in name1
+## dfa<-arrange(df,desc(name1)   reorders df from high to low for values in name1
+
+
+##      dplyr RENAME FUNCTION renames variables easily
+## dfa<-rename(df,newname=oldname, newname2=oldname2) keep going and rename all columns if you want
+
+
+##      dplyr MUTATE FUNCTION   transforms exising variable or creats new variables
+## dfa<-mutate(df,newvariable=existing variable-mean(exvar,na.rm=T))  
+                 ## creates a new variable in this case using mean of another variable
+
+
+
+##      dplyr GROUP_BY FUNCTION  allows you to split a df
+## dfdd<-mutate(df,newname=factor(1*(name1>80),labels=c("cold","hot)))
+                        ##if name1>80 newname's value is "hot" otherwise it's "cold"
+##dfnewdataframe<-group_by(df,newname)
+        ##above makes Group - newname and returns df based on newname being hot or cold
+##summarize(dfdd, name1=mean(name1,na.rm=T), createnewname=max(name2))
+     ##this returns two columns(as named above) with only 2 rows of values labeled(hot & cold)
+
+
+##dplyr allows you to combine steps with "%>%"
+##example: df %>% mutate(something) %>% group_by(something) %>% summarize(something)
+
+##dplyr plays well with data.table and SQL interface for relational databases via DBI package
+
+
+        ## MERGING DATA
+##note that dplyr has "join"  faster but less flexible
+
+##arrange(join(df1,df2,common_ID)) - returns left col(common_ID),df1 columns,df2 columns
+
+
+##merging multiple dataframes with dplyr
+##dfList=list(df1,df2,df3,etc) (this assumes some common variable names)
+##join_all(dflist)
+
+## Swirl HOW TO LOAD NEW STUFF - install_course("Getting and Cleaning Data")
 
 
 
