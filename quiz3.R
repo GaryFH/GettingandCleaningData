@@ -274,6 +274,8 @@ ddply(InsectSprays,.(spray),summarize,sum=sum(count))   #did not work-this seems
 ##      dplyr MUTATE FUNCTION   transforms exising variable or creats new variables
 ## dfa<-mutate(df,newvariable=existing variable-mean(exvar,na.rm=T))  
                  ## creates a new variable in this case using mean of another variable
+##It's common to create a new variable based on the value of one or more variables
+ ##mutate()already in a dataset. The function does exactly this.
 
 
 
@@ -284,6 +286,13 @@ ddply(InsectSprays,.(spray),summarize,sum=sum(count))   #did not work-this seems
         ##above makes Group - newname and returns df based on newname being hot or cold
 ##summarize(dfdd, name1=mean(name1,na.rm=T), createnewname=max(name2))
      ##this returns two columns(as named above) with only 2 rows of values labeled(hot & cold)
+## At the top of the output  you'll see 'Groups: name1', which tells us that this tbl has been
+## grouped by the name1 variable. Everything else looks the same, but now any operation
+##  we apply to the grouped data will take place on a per name1 basis.  
+## as an example - Instead of returning a single value, summarize() now returns the mean size for 
+##EACH unique "name1" value in our dataset
+
+
 
 
 ##dplyr allows you to combine steps with "%>%"
@@ -304,5 +313,5 @@ ddply(InsectSprays,.(spray),summarize,sum=sum(count))   #did not work-this seems
 
 ## Swirl HOW TO LOAD NEW STUFF - install_course("Getting and Cleaning Data")
 
-
+##DATA FRAME TABLE - df1<- tbl_df(df1) - this turns df1 from a "data frame" to a "data frame table"
 
