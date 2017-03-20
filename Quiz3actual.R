@@ -13,12 +13,12 @@ q1<-select(df1,c(ACR,AGS))
 q1b<-filter(q1,ACR==3 & AGS==6)
 ##The above tells you how many and is good but the 
 ##value (I'm guessing row number in orignial dataframe')is not there -  SO WHO CARES?
+##which gives to the row number or position as follows
+q1<-select(df1,c(ACR,AGS))
+q1c<-which(q1$ACR==3 & q1$AGS==6)
+head(q1c,3) ## returns  [1]  125  238  262
 
 
-
-dt <- data.table(read.csv("quiz3data.csv"))
-agricultureLogical <- dt$ACR == 3 & dt$AGS == 6
-which(agricultureLogical)[1:3]
 
 
 ##Question 2
@@ -61,9 +61,81 @@ q3b<-tbl_df(df3b)
 q33m<-merge(q3a,q3b,all = T,by=c("CountryCode"))
 
 
+
+##second try
+c11<-read.csv("GDP.csv")
+c12<-read.csv("EDSTATS_Country.csv")
+q11<-tbl_df(c11)
+q12<-tbl_df(c12)
+
+##make country code variable name the same (q11 named "X" and q12 named "CountryCode")
+q11b<-mutate(q11,CountryCode=X)
+q11c<-mutate(q11b,-X)
+##Merge
+m1<-merge(q11c,q12,by="CountryCode")
+##make tbl_df
+qm1<-tbl_df(m1)
+
+##Figure out how many unique rows (with a factor)
+
+t<-select(qm1,Gross.domestic.product.2012)
+##View(t)
+
+  ta<-select(t,Gross.domestic.product.2012)
+ ##View(ta)
+ select(unique(ta))   # A tibble: 189 × 0
+ 
+tt<-select(qm1,Gross.domestic.product.2012,X.2)
+ttt<-arrange(tt,desc(Gross.domestic.product.2012))
+View(ttt)  ##find number 178 (13th lowest) St. Kitts and Nevis
+
+
+
+
+
+
 ##Question 4
 
 dt[, mean(rankingGDP, na.rm = TRUE), by = Income.Group]
+
+
+##second try
+c11<-read.csv("GDP.csv")
+c12<-read.csv("EDSTATS_Country.csv")
+q11<-tbl_df(c11)
+q12<-tbl_df(c12)
+
+##make country code variable name the same (q11 named "X" and q12 named "CountryCode")
+q11b<-mutate(q11,CountryCode=X)
+q11c<-mutate(q11b,-X)
+##Merge (trying a different order for merge - it makes a difference)
+##m1<-merge(q11c,q12,by="CountryCode")
+m1<-merge(q12,q11c,by="CountryCode")
+##make tbl_df
+
+qm1<-tbl_df(m1)
+qm2<-select(qm1,Income.Group, Gross.domestic.product.2012)
+qm3<-arrange(qm2,Income.Group)
+##View(qm3) - remove empty "Income.Group" rows
+qm4<-qm3[15:224,]
+
+
+qm5<-arrange(qm4,Gross.domestic.product.2012)
+
+##View(qm5) - remove empty "Gross.domestic.product.2012" rows
+qm6<-qm5[22:nrow(qm5),]
+
+
+qm6$Gross.domestic.product.2012<-as.integer (qm6$Gross.domestic.product.2012)
+qm7<-filter(qm6,Income.Group=="High income: OECD")
+
+summarize(qm7,mean(Gross.domestic.product.2012)) ##= 110.0667 which is reportedly wrong
+
+qm8<-filter(qm6,Income.Group=="High income: nonOECD")
+
+summarize(qm8,mean(Gross.domestic.product.2012))  ##= 93.73913 which is reportedly wrong
+
+
 
 
 ##Question 5
@@ -73,4 +145,16 @@ dt$quantileGDP <- cut(dt$rankingGDP, breaks = breaks)
 dt[Income.Group == "Lower middle income", .N, by = c("Income.Group", "quantileGDP")]
 
 
+##second try
+##We need to know the value of 'count' that splits the data into the top 1% and bottom 99% of packages based
+##on total downloads. In statistics, this is called the 0.99, or 99%, sample quantile. Use
+##quantile(pack_sum$count, probs = 0.99) to determine this number.
+
+##       quantile(pack_sum$count,probs=0.99)
+
+qm6$Gross.domestic.product.2012<-as.numeric (qm6$Gross.domestic.product.2012)
+groups<-cut(qm6$Gross.domestic.product.2012,breaks = 5)
+
+## makes nice table but answer is still wrong?
+table(qm6$Income.Group,groups)
 
