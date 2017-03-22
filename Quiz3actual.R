@@ -14,6 +14,8 @@ q1b<-filter(q1,ACR==3 & AGS==6)
 ##The above tells you how many and is good but the 
 ##value (I'm guessing row number in orignial dataframe')is not there -  SO WHO CARES?
 ##which gives to the row number or position as follows
+
+##second try
 q1<-select(df1,c(ACR,AGS))
 q1c<-which(q1$ACR==3 & q1$AGS==6)
 head(q1c,3) ## returns  [1]  125  238  262
@@ -32,7 +34,7 @@ quantile(img, probs = c(0.3, 0.8))
 
 
 ##Question 3
-
+##Google search answer
 url <- "https://d396qusza40orc.cloudfront.net/getdata%2Fdata%2FGDP.csv"
 f <- file.path(getwd(), "GDP.csv")
 download.file(url, f)
@@ -51,6 +53,7 @@ sum(!is.na(unique(dt$rankingGDP)))
 dt[order(rankingGDP, decreasing = TRUE), list(CountryCode, Long.Name.x, Long.Name.y, 
                                               rankingGDP, gdp)][13]
 
+##1st try
 
 df3<-read.csv("GDP.csv" )
 q3a<-tbl_df(df3)
@@ -89,17 +92,56 @@ tt<-select(qm1,Gross.domestic.product.2012,X.2)
 ttt<-arrange(tt,desc(Gross.domestic.product.2012))
 View(ttt)  ##find number 178 (13th lowest) St. Kitts and Nevis
 
+##3rd Try!
 
+c11<-read.csv("GDP.csv", stringsAsFactors = FALSE)
+c12<-read.csv("EDSTATS_Country.csv", stringsAsFactors = FALSE)
+q11<-tbl_df(c11)
+q12<-tbl_df(c12)
+q111<-filter(q11,X!="")
+q1111<-select(q111, CountryCode=X, GDPranking=Gross.domestic.product.2012, Longname=X.2, GDP=X.3)
+q15<-filter(q1111,GDPranking!="")
+
+
+m1<-merge(q15,q12,by="CountryCode")
+m2<-tbl_df(m1)
+m3<-select(m2,-Longname,-(Latest.household.survey:Short.Name))
+nrow(m3)  ##189 - right answer
+
+m3b<-select(m3,-(Region:Latest.population.census))
+m3b$GDPranking<-as.integer(m3b$GDPranking)
+m4<-arrange(m3b,desc(GDPranking))
+m4[13,]
+
+## IN try 3 I couldn't get order right - the return shows1,10,100,101... 
+                ## I tried changing to numeric and integer but data changed in value?
+## - I got 2nd answer by 190-12=188 (the 13th lowest - think about it - since 1st is 190 the 2nd is 189) )
+
+##fourth Try - changed above in read.csv to  stringsAsFactors = FALSE - then changed chr into integers
+##everything above worked
 
 
 
 
 ##Question 4
-
+##Google search answer
 dt[, mean(rankingGDP, na.rm = TRUE), by = Income.Group]
 
 
-##second try
+
+##Third try - m4 from problem 3  looks good
+
+m5<-arrange(m4,Income.Group)
+mhoecd<-filter(m5,Income.Group=="High income: OECD")
+mhnonoecd<-filter(m5,Income.Group=="High income: nonOECD")
+a4a<-summarise(mhoecd,avg=mean(GDPranking))  ##OECD - 32.96667
+
+a4b<-summarise(mhnonoecd,avg=mean(GDPranking))  ##nonOECD - 91.91304
+
+
+
+
+##second try - not perfect
 c11<-read.csv("GDP.csv")
 c12<-read.csv("EDSTATS_Country.csv")
 q11<-tbl_df(c11)
@@ -140,21 +182,25 @@ summarize(qm8,mean(Gross.domestic.product.2012))  ##= 93.73913 which is reported
 
 ##Question 5
 
+##Google search answer
 breaks <- quantile(dt$rankingGDP, probs = seq(0, 1, 0.2), na.rm = TRUE)
 dt$quantileGDP <- cut(dt$rankingGDP, breaks = breaks)
 dt[Income.Group == "Lower middle income", .N, by = c("Income.Group", "quantileGDP")]
 
 
-##second try
+##second try - following comments from Swirl homework problem and google searches
 ##We need to know the value of 'count' that splits the data into the top 1% and bottom 99% of packages based
 ##on total downloads. In statistics, this is called the 0.99, or 99%, sample quantile. Use
 ##quantile(pack_sum$count, probs = 0.99) to determine this number.
 
 ##       quantile(pack_sum$count,probs=0.99)
 
-qm6$Gross.domestic.product.2012<-as.numeric (qm6$Gross.domestic.product.2012)
-groups<-cut(qm6$Gross.domestic.product.2012,breaks = 5)
+##qm6$Gross.domestic.product.2012<-as.numeric (qm6$Gross.domestic.product.2012)
+##groups<-cut(qm6$Gross.domestic.product.2012,breaks = 5)
 
 ## makes nice table but answer is still wrong?
-table(qm6$Income.Group,groups)
+##table(qm6$Income.Group,groups)
 
+groups<-cut(m5$GDPranking,breaks = 5)
+table_groups<-table(m5$Income.Group,groups)  ##this is right  m5 from last try question 4
+                                        ## this also works - table(groups,m5$Income.Group)
