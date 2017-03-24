@@ -3,7 +3,7 @@
 download.file("https://d396qusza40orc.cloudfront.net/getdata%2Fdata%2Fss06hid.csv", destfile = "quiz3data.csv")
 
 ##Read data
-c1<-read.csv("quiz3data.csv" )
+c1<-read.csv("quiz3data.csv",stringsAsFactors = FALSE )
 
 ##Change to data table for dpylr - Library(dplyr)
 df1<-tbl_df(c1)
@@ -100,7 +100,7 @@ q11<-tbl_df(c11)
 q12<-tbl_df(c12)
 q111<-filter(q11,X!="")
 q1111<-select(q111, CountryCode=X, GDPranking=Gross.domestic.product.2012, Longname=X.2, GDP=X.3)
-q15<-filter(q1111,GDPranking!="")
+q15<-filter(q1111,GDPranking!="")  ## rename() instead of select() would have kept all variables
 
 
 m1<-merge(q15,q12,by="CountryCode")
